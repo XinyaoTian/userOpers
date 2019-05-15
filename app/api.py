@@ -1,20 +1,22 @@
 from app import app
+from app.models import User
+from flask import jsonify
 
 
 # get user by user id
 @app.route('/users/uid/<int:uid>', methods=['GET'])
 def get_user_by_uid(uid):
-    pass
+    return jsonify(User.query.get_or_404(uid).to_dict())
 
 
 # get user by username
 @app.route('/users/username/<string:username>', methods=['GET'])
 def get_user_by_username(username):
-    pass
+    return jsonify(User.query.filter(User.username == username).first().to_dict())
 
 
 # get user by phone_number
-@app.route('/users/username/<string:phone_number>', methods=['GET'])
+@app.route('/users/phone_number/<phone_number>', methods=['GET'])
 def get_user_by_phone_number(phone_number):
     pass
 
