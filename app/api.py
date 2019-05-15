@@ -48,14 +48,14 @@ def create_new_user():
 
     # check faults
     if password is None or username is None:
-        return bad_request('This post must include both username and password field.')
+        return bad_request('This post must include both username and password fields.')
     if email is None or phone_number is None:
-        return bad_request('This post must include both email and phone_number field.')
+        return bad_request('This post must include both email and phone_number fields.')
     if User.query.filter_by(username=username).first():
         return bad_request('please use a different username.')
-    if User.query.filter_by(username=email).first():
+    if User.query.filter_by(email=email).first():
         return bad_request('please use a different email address.')
-    if User.query.filter_by(username=phone_number).first():
+    if User.query.filter_by(phone_number=phone_number).first():
         return bad_request('please use a different phone number.')
 
     # db operations
@@ -75,7 +75,36 @@ def create_new_user():
 # update user info
 @app.route('/users', methods=['PUT'])
 def update_user():
-    pass
+    username = request.form.get('username')
+    if username is None:
+        return bad_request('This post must include username field.')
+
+    # get PUT data
+    password = request.form.get('password') or None
+    email = request.form.get('email') or None
+    phone_number = request.form.get('phone_number') or None
+
+    # take out data form db
+    user = User.query.filter_by(username=username).first()
+
+    # update procedure
+    if password is not None:
+        user.set_password(password)
+    if email is not None:
+        user.email = email
+    if phone_number is not None:
+        user.phone_number = phone_number
+
+    # update db
+    db.session.add(user)
+    db.session.commit()
+
+    # response
+    response = jsonify(user.to_dict())
+    response.status_code = 201
+    response.headers['Location'] = url_for('get_user_by_uid', uid=user.id)
+
+    return response
 
 
 # verify username and password
@@ -86,7 +115,7 @@ def validate_password():
 
     # if there is no password field in post
     if password is None or username is None:
-        return bad_request('This post must include both username and password field.')
+        return bad_request('This post must include both username and password fields.')
     user = User.query.filter(User.username == username).first()
     if user is None:
         return jsonify({'username': username, 'validation': 'False'})

@@ -23,7 +23,7 @@ class User(db.Model):
         return check_password_hash(self.password_hash, password)
 
     # for api usage
-    def to_dict(self, include_email=False, include_phone_num=False):
+    def to_dict(self, include_email=True, include_phone_num=True):
         data = {
             'id': self.id,
             'username': self.username,
