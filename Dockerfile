@@ -12,6 +12,7 @@ RUN pip install Flask-wtf
 RUN pip install psycopg2-binary
 RUN pip install flask-sqlalchemy
 RUN pip install flask-migrate
+RUN pip install python-dotenv
 # Expose port
 EXPOSE 80
 # Run command
