@@ -10,8 +10,6 @@ Add . /var/app/userOpers
 RUN pip install Flask
 RUN pip install Flask-wtf
 RUN pip install psycopg2-binary
-RUN pip install flask-bootstrap
-RUN flask db upgrade
 # Expose port
 EXPOSE 80
 # Run command
