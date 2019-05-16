@@ -118,14 +118,14 @@ def validate_password():
         return bad_request('This post must include both username and password fields.')
     user = User.query.filter(User.username == username).first()
     if user is None:
-        return jsonify({'username': username, 'validation': 'False'})
+        return jsonify([{'username': username, 'validation': 'False'}])
     validate = user.check_password(password)
 
     # authentication verify success.
     if validate is True:
-        return jsonify({'username': username, 'validation': 'True'})
+        return jsonify([{'username': username, 'validation': 'True'}])
     # authentication verify failed.
-    return jsonify({'username': username, 'validation': 'False'})
+    return jsonify([{'username': username, 'validation': 'False'}])
 
 
 # bad requests holder
