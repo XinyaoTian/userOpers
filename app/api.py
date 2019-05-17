@@ -1,7 +1,7 @@
 from app import app, db
 from app.models import User
 from flask import jsonify
-from flask import request, url_for
+from flask import request, url_for, redirect
 from werkzeug.http import HTTP_STATUS_CODES
 
 
@@ -64,12 +64,12 @@ def create_new_user():
     db.session.add(new_user)
     db.session.commit()
 
-    # response
-    response = jsonify(new_user.to_dict())
-    response.status_code = 201
-    response.headers['Location'] = url_for('get_user_by_uid', uid=new_user.id)
+    # response data
+    data = list()
+    # This username is the one which user input in POST form
+    data.append(User.query.filter(User.username == username).first_or_404().to_dict())
 
-    return response
+    return jsonify(data)
 
 
 # update user info
@@ -99,12 +99,12 @@ def update_user():
     db.session.add(user)
     db.session.commit()
 
-    # response
-    response = jsonify(user.to_dict())
-    response.status_code = 201
-    response.headers['Location'] = url_for('get_user_by_uid', uid=user.id)
+    # response data
+    data = list()
+    # This username is the one which user input in POST form
+    data.append(User.query.filter(User.username == username).first_or_404().to_dict())
 
-    return response
+    return jsonify(data)
 
 
 # verify username and password
